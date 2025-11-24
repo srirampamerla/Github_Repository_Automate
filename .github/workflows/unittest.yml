@@ -1,0 +1,29 @@
+name: Python CI #Workflow names
+
+#Trigger the wokflow on any push to the main branch or on any pull request targeting the main branch
+
+on: #Keywords to trigger the workflow
+  push: #Event(Push,pull,merge,delete) -- that triggers the workflow
+    branches: [ main ]
+  pull_request:
+    branches: [ main ] #diff branches staging,production,development
+jobs: #A workflow run is made up of one or more jobs
+  test: #Job ID/name
+    runs-on: ubuntu-latest #The type of machine to run the job on(Git hub provide containers for different OS(ubuntu,windows,macos))
+    steps: #A job contains a sequence of tasks called steps
+    - name: Checkout repository #Checks-out your repository for the repository that contains the workflow()
+      uses: actions/checkout@v2 #prebuilt action to checkout the repo
+
+    - name: Set up Python 3.8 #Set up python environment
+      uses: actions/setup-python@v2 #prebuilt action to setup python environment
+      with: #Inputs for the action
+        python-version: 3.8 #specify the python version
+
+    - name: Install dependencies #Install the dependencies from requirements.txt
+      run: |    #Run multiple commands
+        python -m pip install --upgrade pip #Upgrade pip to the latest version
+        pip install -r requirements.txt #Install dependencies from requirements.txt
+
+    - name: Run tests
+      run: |
+        pytest #Run pytest to execute the unit tests when we are runnng it looks for files starting with test_ or ending with _test.py
